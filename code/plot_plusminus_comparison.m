@@ -83,6 +83,30 @@ if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title([outputsettings.StemName,' transfer curves normalized by CFP']);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-mean-norm'],outputsettings.Directory);
 
+% IFP vs. CFP
+h = figure('PaperPosition',[1 1 5 3.66]);
+set(h,'visible','off');
+for i=1:step:n_var
+    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
+    loglog(bin_centers(which),pm_results.InMeans(which,i,1),[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+end;
+for i=1:step:n_var
+    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
+    loglog(bin_centers(which),pm_results.InMeans(which,i,2),[ntick '--'],'Color',hsv2rgb([hues(i) 1 0.9]));
+    loglog(bin_centers(which),pm_results.InMeans(which,i,1).*pm_results.InStandardDevs(which,i,1),':','Color',hsv2rgb([hues(i) 1 0.9]));
+    loglog(bin_centers(which),pm_results.InMeans(which,i,1)./pm_results.InStandardDevs(which,i,1),':','Color',hsv2rgb([hues(i) 1 0.9]));
+    loglog(bin_centers(which),pm_results.InMeans(which,i,2).*pm_results.InStandardDevs(which,i,2),':','Color',hsv2rgb([hues(i) 1 0.9]));
+    loglog(bin_centers(which),pm_results.InMeans(which,i,2)./pm_results.InStandardDevs(which,i,2),':','Color',hsv2rgb([hues(i) 1 0.9]));
+end;
+xlabel(['CFP ' cfp_units]); ylabel(['IFP ' out_units]);
+set(gca,'XScale','log'); set(gca,'YScale','log');
+legend('Location','Best',pmlegendentries,'Minus');
+if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
+if(outputsettings.FixedInputAxis), ylim(outputsettings.FixedInputAxis); end;
+title([outputsettings.StemName,' IFP vs. CFP']);
+outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-input-v-cfp'],outputsettings.Directory);
+
+
 % OFP vs. CFP
 h = figure('PaperPosition',[1 1 5 3.66]);
 set(h,'visible','off');
@@ -106,35 +130,36 @@ if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title([outputsettings.StemName,' OFP vs. CFP']);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-v-cfp'],outputsettings.Directory);
 
-% Relative change in OFP vs. CFP
-h = figure('PaperPosition',[1 1 5 3.66]);
-set(h,'visible','off');
-for i=1:step:n_var
-    which = find(pm_results.Valid(1:(end-1),i,1) & pm_results.Valid(1:(end-1),i,2) & ...
-        pm_results.Valid(2:end,i,1) & pm_results.Valid(2:end,i,2));
-    marginal_centers = (bin_centers(which) + bin_centers(which+1)) / 2;
-    p_ofp_difference = pm_results.OutMeans(which+1,i,1) ./ pm_results.OutMeans(which,i,1);
-    m_ofp_difference = pm_results.OutMeans(which+1,i,2) ./ pm_results.OutMeans(which,i,2);
-    cfp_difference = (bin_centers(which+1) ./ bin_centers(which));
-    semilogx(marginal_centers,p_ofp_difference./cfp_difference',[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
-end
-for i=1:step:n_var
-    which = find(pm_results.Valid(1:(end-1),i,1) & pm_results.Valid(1:(end-1),i,2) & ...
-        pm_results.Valid(2:end,i,1) & pm_results.Valid(2:end,i,2));
-    marginal_centers = (bin_centers(which) + bin_centers(which+1)) / 2;
-    p_ofp_difference = pm_results.OutMeans(which+1,i,1) ./ pm_results.OutMeans(which,i,1);
-    m_ofp_difference = pm_results.OutMeans(which+1,i,2) ./ pm_results.OutMeans(which,i,2);
-    cfp_difference = (bin_centers(which+1) ./ bin_centers(which));
-    semilogx(marginal_centers,m_ofp_difference./cfp_difference',[ntick '--'],'Color',hsv2rgb([hues(i) 1 0.9]));
-end;
-xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
-set(gca,'XScale','log'); set(gca,'YScale','linear');
-legend('Location','Best',pmlegendentries,'Minus');
-if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
-if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
-title([outputsettings.StemName,' marginal change in OFP vs. CFP']);
-outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-marginal-ofp'],outputsettings.Directory);
-
+% % Relative change in OFP vs. CFP
+% Removed because it wasn't ever useful
+% h = figure('PaperPosition',[1 1 5 3.66]);
+% set(h,'visible','off');
+% for i=1:step:n_var
+%     which = find(pm_results.Valid(1:(end-1),i,1) & pm_results.Valid(1:(end-1),i,2) & ...
+%         pm_results.Valid(2:end,i,1) & pm_results.Valid(2:end,i,2));
+%     marginal_centers = (bin_centers(which) + bin_centers(which+1)) / 2;
+%     p_ofp_difference = pm_results.OutMeans(which+1,i,1) ./ pm_results.OutMeans(which,i,1);
+%     m_ofp_difference = pm_results.OutMeans(which+1,i,2) ./ pm_results.OutMeans(which,i,2);
+%     cfp_difference = (bin_centers(which+1) ./ bin_centers(which));
+%     semilogx(marginal_centers,p_ofp_difference./cfp_difference',[ptick '-'],'Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+% end
+% for i=1:step:n_var
+%     which = find(pm_results.Valid(1:(end-1),i,1) & pm_results.Valid(1:(end-1),i,2) & ...
+%         pm_results.Valid(2:end,i,1) & pm_results.Valid(2:end,i,2));
+%     marginal_centers = (bin_centers(which) + bin_centers(which+1)) / 2;
+%     p_ofp_difference = pm_results.OutMeans(which+1,i,1) ./ pm_results.OutMeans(which,i,1);
+%     m_ofp_difference = pm_results.OutMeans(which+1,i,2) ./ pm_results.OutMeans(which,i,2);
+%     cfp_difference = (bin_centers(which+1) ./ bin_centers(which));
+%     semilogx(marginal_centers,m_ofp_difference./cfp_difference',[ntick '--'],'Color',hsv2rgb([hues(i) 1 0.9]));
+% end;
+% xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
+% set(gca,'XScale','log'); set(gca,'YScale','linear');
+% legend('Location','Best',pmlegendentries,'Minus');
+% if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
+% if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
+% title([outputsettings.StemName,' marginal change in OFP vs. CFP']);
+% outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-marginal-ofp'],outputsettings.Directory);
+% 
 
 % ratio plot
 h = figure('PaperPosition',[1 1 5 3.66]);
@@ -144,13 +169,27 @@ for i=1:step:n_var
     semilogx(bin_centers(which),pm_results.Ratios(which,i),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
 end;
 xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
-set(gca,'XScale','log'); set(gca,'YScale','linear');
+set(gca,'XScale','log'); set(gca,'YScale','log');
 legend('Location','Best',legendentries);
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title(['+/- Ratios for ',outputsettings.StemName]);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-ratios'],outputsettings.Directory);
 
+% ratio plot
+h = figure('PaperPosition',[1 1 5 3.66]);
+set(h,'visible','off');
+for i=1:step:n_var
+    which = pm_results.Valid(:,i,1) & pm_results.Valid(:,i,2);
+    semilogx(bin_centers(which),pm_results.Ratios(which,i),'-','Color',hsv2rgb([hues(i) 1 0.9])); hold on;
+end;
+xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
+set(gca,'XScale','log'); set(gca,'YScale','log');
+legend('Location','Best',legendentries);
+if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
+if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
+title(['+/- Ratios for ',outputsettings.StemName]);
+outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-ratios'],outputsettings.Directory);
 
 % SNR plots
 if n_var == 1, 
