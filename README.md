@@ -1,9 +1,40 @@
-This is the TASBE Flow Analytics package, release 1.0.0-alpha
+# TASBE Flow Analytics
+[![Build Status](https://travis-ci.org/TASBE/TASBEFlowAnalytics.svg?branch=master)](https://travis-ci.org/TASBE/TASBEFlowAnalytics)
 
-This project is intended to be run using either Matlab or Octave.
-To use the package, you should either add it to your path, e.g.:
+TASBE Flow Analytics is a flow cytometry analysis package.
 
-    addpath('path to package');
+## Features
+
+- Runs on both Matlab and Octave
+- Flow cytometry analysis
+- Plotting and comparison templates for many experiments
+- Unit conversion to ERF from multiple channels
+- Compensation for autofluorescence and spectral overlap
+- Distributed under a permissive free and open license
+
+## Installation
+
+- Using the shell (requires a Unix-like operating system such as GNU/Linux or Apple OSX):
+
+    ```bash
+    git clone https://github.com/TASBE/TASBEFlowAnalyics.git
+    cd TASBEFlowAnalyics
+    make install
+    ```
+    This will add the TASBEFlowAnalyics directory to the Matlab and/or GNU Octave searchpath. If both Matlab and GNU Octave are available on your machine, it will install TASBEFlowAnalyics for both.
+
+- Manual installation:
+  - Download the package from [GitHub](https://github.com/TASBE/TASBEFlowAnalyics)
+  - Start Matlab or Octave
+  - Go to the ``TASBEFlowAnalyics/code`` directory
+  - Add and save the set of paths:
+  
+      ```
+    addpath(genpath(pwd));
+    savepath;
+    ```
+
+## Usage
 
 In use of this package, you will typically want to split your
 processing into three stages:
@@ -12,4 +43,4 @@ processing into three stages:
 - Using a ColorModel for batch processing of experimental data
 - Comparison and plotting of the results of batch processing
 
-Example files are provided that show how these stages typically work.
+Example files are provided in the [TASBE Tutorial](https://github.com/TASBE/TASBEFlowAnalytics-tutorial) that show how these stages typically work.
