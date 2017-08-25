@@ -9,7 +9,7 @@ OCTAVE?=octave
 TESTDIR=$(CURDIR)/tests
 ROOTDIR=$(CURDIR)/code
 
-ADDPATH=orig_dir=pwd();cd('$(ROOTDIR)');addpath(genpath(pwd));cd(orig_dir)
+ADDPATH=orig_dir=pwd();cd('$(ROOTDIR)');tasbe_set_path();cd(orig_dir)
 RMPATH=rmpath('$(ROOTDIR)');
 SAVEPATH=savepath();exit(0)
 
