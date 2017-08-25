@@ -7,10 +7,9 @@ MATLAB?=matlab
 OCTAVE?=octave
 
 TESTDIR=$(CURDIR)/tests
-ROOTDIR=$(CURDIR)/MOxUnit
-UTILDIR=$(ROOTDIR)/util
+ROOTDIR=$(CURDIR)/code
 
-ADDPATH=orig_dir=pwd();cd('$(ROOTDIR)');moxunit_set_path();cd(orig_dir)
+ADDPATH=orig_dir=pwd();cd('$(ROOTDIR)');addpath(genpath(pwd));cd(orig_dir)
 RMPATH=rmpath('$(ROOTDIR)');
 SAVEPATH=savepath();exit(0)
 
@@ -20,18 +19,18 @@ UNINSTALL=$(RMPATH);$(SAVEPATH)
 help:
 	@echo "Usage: make <target>, where <target> is one of:"
 	@echo "------------------------------------------------------------------"
-	@echo "  install            to add MOxUnit to the Matlab and GNU Octave"
-	@echo "                     search paths, using whichever is present"
-	@echo "  uninstall          to remove MOxUnit from the Matlab and GNU"
+	@echo "  install            to add TASBEFlowAnalytics to the Matlab and "
+	@echo "                     GNU Octave search paths, using whichever is present"
+	@echo "  uninstall          to remove TASBEFlowAnalytics from the Matlab and GNU"
 	@echo "                     Octave search paths, using whichever is"
 	@echo "                     present"
 	@echo "  test               to run tests using the Matlab and GNU Octave"
 	@echo "                     search paths, whichever is present"
 	@echo ""
-	@echo "  install-matlab     to add MOxUnit to the Matlab search path"
-	@echo "  install-octave     to add MOxUnit to the GNU Octave search path"
-	@echo "  uninstall-matlab   to remove MOxUnit from the Matlab search path"
-	@echo "  uninstall-octave   to remove MOxUnit from the GNU Octave search"
+	@echo "  install-matlab     to add TASBEFlowAnalytics to the Matlab search path"
+	@echo "  install-octave     to add TASBEFlowAnalytics to the GNU Octave search path"
+	@echo "  uninstall-matlab   to remove TASBEFlowAnalytics from the Matlab search path"
+	@echo "  uninstall-octave   to remove TASBEFlowAnalytics from the GNU Octave search"
 	@echo "                     path"
 	@echo "  test-matlab        to run tests using Matlab"
 	@echo "  test-octave        to run tests using GNU Octave"
@@ -52,7 +51,7 @@ RUNTESTS_ARGS?='-verbose'
 TEST_RUNNER?=moxunit_runtests
 
 ifdef RUN_DOC_TEST
-	RUNTESTS_ARGS+=,'${ROOTDIR}','${UTILDIR}'
+	RUNTESTS_ARGS+=,'${ROOTDIR}'
 	TEST_RUNNER=modox_runtests
 else
 	RUNTESTS_ARGS+=,'${TESTDIR}'
