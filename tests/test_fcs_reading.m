@@ -6,8 +6,8 @@ function test_suite = test_fcs_reading
     initTestSuite;
 
 function test_fca_readfcs
-    f1 = '../../TASBEFlowAnalytics-Tutorial/example_controls/07-29-11_blank_P3.fcs';
-    f2 = '../../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
+    f1 = '../TASBEFlowAnalytics-Tutorial/example_controls/07-29-11_blank_P3.fcs';
+    f2 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
 
     [data, hdr] = fca_readfcs(f1);
 
@@ -23,7 +23,7 @@ function test_fca_readfcs
 
 function test_fcs_scatter
     TASBEConfig.set('plotPath','/tmp');
-    f2 = '../../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
+    f2 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
     [data h] = fcs_scatter(f2,'FITC-A','Pacific Blue-A',1,[],0);
     assert(all(size(data) == [114929 2]));
     outputfig(h,'fcs_test',TASBEConfig.get('plotPath'));
