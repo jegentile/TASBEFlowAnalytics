@@ -14,10 +14,10 @@ function [b,b_err] = make_linear_compensation_model(CM, settings, filename, driv
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-min_threshold = 0;
-if hasSetting(settings,'MinimumCompensationInput')
-    min_threshold = 10^getSetting(settings,'MinimumCompensationInput');
-end
+flowMin = TASBEConfig.get(flow.rangeMin);
+flowMax = TASBEConfig.get(flow.rangeMax);
+minDrivenThreshold = TASBEConfig.get('compensation.minimumDrivenLevel');
+maxDrivenThreshold = TASBEConfig.get('compensation.maximumDrivenLevel');
 
 % Get read FCS file and select channels of interest
 [rawfcs fcshdr] = read_filtered_au(CM,filename);
@@ -32,7 +32,7 @@ end
 % (compensation can be badly thrown off by negative values)
 no_AF_data(no_AF_data<1) = 1;
 
-bins = BinSequence(3,0.2,5.5,'log_bins'); % take 10^5.5 as the max value, to avoid saturated range
+bins = BinSequence(log10(minDrivenThreshold),0.2,log10(maxDrivenThreshold),'log_bins');
 [counts means stds] = subpopulation_statistics(bins,no_AF_data,driven,'geometric');
 
 min_significant = find(means(:,passive)>(2*getStd(CM.autofluorescence_model{passive})) & counts(:)>10,1);
@@ -40,8 +40,9 @@ min_significant = find(means(:,passive)>(2*getStd(CM.autofluorescence_model{pass
 if size(min_significant,1) > 0
     binEdges = get_bin_edges(bins);
     lower_threshold = binEdges(min_significant); % lower edge of first significant bin
-    lower_threshold = max(lower_threshold,min_threshold);
-    which = find(no_AF_data(:,driven)>=lower_threshold);
+    lower_threshold = max(lower_threshold,minDrivenThreshold);
+    upper_threshold = min(max(no_AF_data(:,driven))/3,maxDrivenThreshold); % back off by a half-log from max
+    which = find(no_AF_data(:,driven)>=lower_threshold & no_AF_data(:,driven)<=upper_threshold);
     b = geomean(no_AF_data(which,passive)./no_AF_data(which,driven));
     b_err = geostd(no_AF_data(which,passive)./no_AF_data(which,driven));
 else
@@ -58,7 +59,7 @@ if CM.compensation_plot
     h = figure('PaperPosition',[1 1 6 4]);
     set(h,'visible','off');
     pos = no_AF_data(:,driven)>1 & no_AF_data(:,passive)>1;
-    smoothhist2D(log10([no_AF_data(pos,driven) no_AF_data(pos,passive)]),10,[200, 200],[],'image',[0 0; 6 6]); hold on;
+    smoothhist2D(log10([no_AF_data(pos,driven) no_AF_data(pos,passive)]),10,[200, 200],[],'image',[flowMin flowMin; flowMax flowMax]); hold on;
     which = means(:,driven)>=lower_threshold;
     plot(log10(means(which,driven)),log10(means(which,passive)),'k*-');
     plot(log10(means(which,driven)),log10(means(which,passive).*stds(which,passive)),'k:');
