@@ -64,7 +64,7 @@ end
 model.selected_components = eigsort(AGP.selected_components);
 
 % reweight components to make select components tighter
-reweight = dist.ComponentProportion;
+reweight = dist.PComponents;
 lossweight = AGP.tightening*sum(reweight(model.selected_components));
 for i=1:AGP.k_components,
     if(isempty(find(i==model.selected_components, 1)))

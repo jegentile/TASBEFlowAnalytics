@@ -47,7 +47,7 @@ classdef gmdistribution
    properties
       mu                        %% means
       Sigma                     %% covariances
-      ComponentProportion       %% mixing proportions
+      PComponents       %% mixing proportions
       DistributionName          %% 'gaussian mixture distribution'
       NumComponents             %% Number of mixture components
       NumVariables              %% Dimension d of each Gaussian component
@@ -81,7 +81,7 @@ classdef gmdistribution
         obj.NumComponents = row_n; %rows (mu);
         obj.NumVariables = columns (mu);
         if (isempty (p))
-          obj.ComponentProportion = ones (1,obj.NumComponents) / obj.NumComponents;
+          obj.PComponents = ones (1,obj.NumComponents) / obj.NumComponents;
         else
           if any (p < 0)
             error ('gmmdistribution: component weights must be non-negative');
@@ -92,7 +92,7 @@ classdef gmdistribution
           elseif (s ~= 1)
             p = p / s;
           end
-          obj.ComponentProportion = p(:)';
+          obj.PComponents = p(:)';
         end
         if (length (size (sigma)) == 3)
           obj.SharedCovariance = false;
@@ -140,7 +140,7 @@ classdef gmdistribution
               sig = obj.Sigma(:,:,i);
             end
           end
-          p_x_l(:,i) = mvncdf (X,obj.mu(i,:),sig)*obj.ComponentProportion(i);
+          p_x_l(:,i) = mvncdf (X,obj.mu(i,:),sig)*obj.PComponents(i);
         end
         c = sum (p_x_l, 2);
       end
@@ -166,7 +166,7 @@ classdef gmdistribution
       function c = disp (obj)
           fprintf('Gaussian mixture distribution with %d components in %d dimension(s)\n', obj.NumComponents, columns (obj.mu));
           for i = 1:obj.NumComponents
-              fprintf('Clust %d: weight %d\n\tMean: ', i, obj.ComponentProportion(i));
+              fprintf('Clust %d: weight %d\n\tMean: ', i, obj.PComponents(i));
               fprintf('%g ', obj.mu(i,:));
               fprintf('\n');
               if (~obj.SharedCovariance)
@@ -232,7 +232,7 @@ classdef gmdistribution
         % Random numbers from Gaussian mixture distribution
       function c = random (obj,n)
           c = zeros (n, obj.NumVariables);
-          classes = randsample (obj.NumVariables, n, true, obj.ComponentProportion);
+          classes = randsample (obj.NumVariables, n, true, obj.PComponents);
           if (obj.SharedCovariance)
               if (obj.DiagonalCovariance)
                   sig = diag (obj.Sigma);
@@ -296,7 +296,7 @@ classdef gmdistribution
           dets(i) = prod (diag (r));
         end
         p_x_l = exp (-M/2);
-        coeff = obj.ComponentProportion ./ ((2*pi)^(obj.NumVariables/2).*dets);
+        coeff = obj.PComponents ./ ((2*pi)^(obj.NumVariables/2).*dets);
         p_x_l = bsxfun (@times, p_x_l, coeff);
       end
    
