@@ -14,8 +14,8 @@ function [b,b_err] = make_linear_compensation_model(CM, settings, filename, driv
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-flowMin = TASBEConfig.get(flow.rangeMin);
-flowMax = TASBEConfig.get(flow.rangeMax);
+flowMin = TASBEConfig.get('flow.rangeMin');
+flowMax = TASBEConfig.get('flow.rangeMax');
 minDrivenThreshold = TASBEConfig.get('compensation.minimumDrivenLevel');
 maxDrivenThreshold = TASBEConfig.get('compensation.maximumDrivenLevel');
 
@@ -31,6 +31,9 @@ end
 % make sure nothing's below 1, for compensation and geometric statistics
 % (compensation can be badly thrown off by negative values)
 no_AF_data(no_AF_data<1) = 1;
+
+% set max from data if max is higher than data
+if maxDrivenThreshold>max(max(no_AF_data)), maxDrivenThreshold = ceil(max(max(no_AF_data))); end;
 
 bins = BinSequence(log10(minDrivenThreshold),0.2,log10(maxDrivenThreshold),'log_bins');
 [counts means stds] = subpopulation_statistics(bins,no_AF_data,driven,'geometric');

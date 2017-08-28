@@ -12,6 +12,7 @@ classdef TASBEConfig
             s = struct();
             defaults = containers.Map();
             
+            % Matlab GMdistribution
             % Generic flow data analysis
             s.flow.rangeMin = 0;                           % bin minimum (log10 scale)
             s.flow.rangeMax = 7;                           % bin maximum (log10 scale)
@@ -69,7 +70,7 @@ classdef TASBEConfig
             % Spectral bleed compensation
             s.compensation = struct();
             s.compensation.minimumDrivenLevel = 1e2;    % uniformly ignore all less than this level of a.u. 
-            s.compensation.maximumDrivenLevel = [];     % uniformly ignore all greater than this level of a.u. 
+            s.compensation.maximumDrivenLevel = Inf;     % uniformly ignore all greater than this level of a.u. 
             s.compensation.minimumBinCount = 10;        % ignore bins with less than this many elements
             s.compensation.highBleedWarning = 0.1;      % Warn about high bleed at this level
             s.compensation.plot = [];                   % Should compensation plots be created?
