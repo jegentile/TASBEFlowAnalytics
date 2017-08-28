@@ -100,7 +100,7 @@ ifeq ($(MATLAB_BIN),)
     MATLAB_BIN=$(shell ls /Applications/MATLAB_R20*/bin/${MATLAB} 2>/dev/null | tail -1)
 endif
 	
-MATLAB_RUN=$(MATLAB_BIN) -nojvm -nodisplay -nosplash -r
+MATLAB_RUN=$(MATLAB_BIN) -nodisplay -nosplash -r
 OCTAVE_RUN=$(OCTAVE_BIN) --no-gui --quiet --eval
 
 install-matlab:
