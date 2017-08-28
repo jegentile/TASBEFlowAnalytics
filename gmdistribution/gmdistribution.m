@@ -124,7 +124,7 @@ classdef gmdistribution
        % Cumulative distribution function for Gaussian mixture distribution
       function c = cdf (obj, X)
         X = checkX (obj, X, 'cdf');
-        p_x_l = zeros (df_rows (X), obj.NumComponents);
+        p_x_l = zeros (rows (X), obj.NumComponents);
         if (obj.SharedCovariance)
           if (obj.DiagonalCovariance)
             sig = diag (obj.Sigma);
@@ -305,7 +305,7 @@ classdef gmdistribution
         %% Check format of argument X
       function X = checkX (obj, X, name)
         if (columns (X) ~= obj.NumVariables)
-          if (columns (X) == 1 && df_rows (X) == obj.NumVariables)
+          if (columns (X) == 1 && rows (X) == obj.NumVariables)
             X = X';
           else
             error ('gmdistribution.%s: X has %d columns instead of %d\n', ...

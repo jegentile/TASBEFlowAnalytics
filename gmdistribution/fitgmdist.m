@@ -259,13 +259,13 @@ function obj = fitgmdist(data, k, varargin)
       end
       if (rows (weights) ~= nRows)
         error ('fitgmdist: number of weights %d must match number of samples %d',...
-               df_rows (weights), nRows)
+               rows (weights), nRows)
       end
       non_zero = (weights(:,1) > 0);
       weights = weights(non_zero,:);
       data    = data   (non_zero,:);
 
-      nRows = df_rows (data);
+      nRows = rows (data);
       raw_samples = sum (weights(:,1));
     else
       raw_samples = nRows;
