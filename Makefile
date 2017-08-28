@@ -6,11 +6,12 @@
 MATLAB?=matlab
 OCTAVE?=octave
 
+PACKAGEDIR=$(CURDIR)
 TESTDIR=$(CURDIR)/tests
 ROOTDIR=$(CURDIR)/code
 
-ADDPATH=orig_dir=pwd();cd('$(ROOTDIR)');tasbe_set_path();cd(orig_dir)
-RMPATH=rmpath('$(ROOTDIR)');
+ADDPATH=orig_dir=pwd();cd('$(PACKAGEDIR)');tasbe_set_path();cd(orig_dir)
+RMPATH=rmpath('$(PACKAGEDIR)');
 SAVEPATH=savepath();exit(0)
 
 INSTALL=$(ADDPATH);$(SAVEPATH)
