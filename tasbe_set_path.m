@@ -23,7 +23,11 @@ function directories_added=tasbe_set_path()
     % Check if it's Octave; if not, assume matlab
     v = ver();
     isOctave = strcmpi(v(1).Name,'octave');
-    if ~isOctave, sub_dirs{end+1} = 'octave_compat'; end;
+    if isOctave, 
+        sub_dirs{end+1} = 'matlab_compat'; 
+    else
+        sub_dirs{end+1} = 'octave_compat'; 
+    end;
     % Check if Matlab gmdistribution function is available; if not, load the free alternative
     if isempty(which('gmdistribution')), sub_dirs{end+1} = 'gmdistribution'; end;
     
