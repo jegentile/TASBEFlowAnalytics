@@ -41,12 +41,12 @@ if (is_octave)
     %set(FS,'FontSize',8);
     
     % print PDFs
-    %print(h,'-dpdfwrite',[path shortname]);
+    print(h,'-dpdfwrite',[path shortname]);
 else
     print(h,'-depsc2',[path shortname]); % Still produce a vector format when invoked by hand via Matlab
 end
 print(h,'-dpng',[path shortname]);
-%saveas(h,[path shortname '.fig']);
+saveas(h,[path shortname '.fig']);
 
 if(strcmp(get(h,'visible'),'off'))
     close(h);
