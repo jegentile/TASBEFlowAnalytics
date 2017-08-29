@@ -84,20 +84,20 @@ CM=resolve(CM, settings);
 CMS = struct(CM);
 
 UT = struct(CMS.unit_translation);
-assertElementsAlmostEqual(UT.k_MEFL,        2267.3, 1e-4);
+assertElementsAlmostEqual(UT.k_MEFL,        2267.3,   'relative', 1e-2);
 assertElementsAlmostEqual(UT.first_peak,    8);
 assertElementsAlmostEqual(UT.fit_error,     0);
-assertElementsAlmostEqual(UT.peak_sets{1},  [132.9742], 1e-4);
+assertElementsAlmostEqual(UT.peak_sets{1},  [128.35], 'relative', 1e-2);
 
 AFM_Y = struct(CMS.autofluorescence_model{1});
-assertElementsAlmostEqual(AFM_Y.af_mean,    3.2226, 1e-4);
-assertElementsAlmostEqual(AFM_Y.af_std,     16.9663, 1e-4);
+assertElementsAlmostEqual(AFM_Y.af_mean,    3.2226,  'absolute', 0.1);
+assertElementsAlmostEqual(AFM_Y.af_std,     16.9663, 'absolute', 0.1);
 AFM_R = struct(CMS.autofluorescence_model{2});
-assertElementsAlmostEqual(AFM_R.af_mean,    3.3265, 1e-4);
-assertElementsAlmostEqual(AFM_R.af_std,     17.2920, 1e-4);
+assertElementsAlmostEqual(AFM_R.af_mean,    3.3265,  'absolute', 0.1);
+assertElementsAlmostEqual(AFM_R.af_std,     17.2920, 'absolute', 0.1);
 AFM_B = struct(CMS.autofluorescence_model{3});
-assertElementsAlmostEqual(AFM_B.af_mean,    5.3669, 1e-4);
-assertElementsAlmostEqual(AFM_B.af_std,     16.6900, 1e-4);
+assertElementsAlmostEqual(AFM_B.af_mean,    5.3669,  'absolute', 0.1);
+assertElementsAlmostEqual(AFM_B.af_std,     16.6900, 'absolute', 0.1);
 
 COMP = struct(CMS.compensation_model);
 expected_matrix = [...
@@ -105,12 +105,12 @@ expected_matrix = [...
     0.0010386   1.0000      0.0021664;
          0      0.00054793  1.0000];
 
-assertElementsAlmostEqual(COMP.matrix,      expected_matrix, 1e-4);
+assertElementsAlmostEqual(COMP.matrix,      expected_matrix, 'absolute', 1e-3);
 
 CTM = struct(CMS.color_translation_model);
 expected_scales = [...
-       NaN    0.96421    2.1851;
-    1.0362       NaN       NaN;
-    0.45705      NaN       NaN];
+       NaN    0.95821    2.1802;
+    1.0420       NaN       NaN;
+    0.45799      NaN       NaN];
 
-assertElementsAlmostEqual(CTM.scales,       expected_scales, 1e-4);
+assertElementsAlmostEqual(CTM.scales,       expected_scales, 'relative', 1e-2);

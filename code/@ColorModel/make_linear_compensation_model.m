@@ -44,10 +44,15 @@ if size(min_significant,1) > 0
     binEdges = get_bin_edges(bins);
     lower_threshold = binEdges(min_significant); % lower edge of first significant bin
     lower_threshold = max(lower_threshold,minDrivenThreshold);
-    upper_threshold = min(max(no_AF_data(:,driven))/3,maxDrivenThreshold); % back off by a half-log from max
+    upper_threshold = min(max(no_AF_data(:,driven))*0.9,maxDrivenThreshold); % back off a little from max
     which = find(no_AF_data(:,driven)>=lower_threshold & no_AF_data(:,driven)<=upper_threshold);
-    b = geomean(no_AF_data(which,passive)./no_AF_data(which,driven));
-    b_err = geostd(no_AF_data(which,passive)./no_AF_data(which,driven));
+    if(numel(which)),
+        b = geomean(no_AF_data(which,passive)./no_AF_data(which,driven));
+        b_err = geostd(no_AF_data(which,passive)./no_AF_data(which,driven));
+    else
+        b = 0; % no significant bleed-over
+        b_err = 1; % no significant error
+    end
 else
     lower_threshold = 1e6;
     b = 0; % no significant bleed-over

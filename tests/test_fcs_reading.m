@@ -24,6 +24,6 @@ function test_fca_readfcs
 function test_fcs_scatter
     TASBEConfig.set('plotPath','/tmp');
     f2 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_Beads_P3.fcs';
-    [data h] = fcs_scatter(f2,'FITC-A','Pacific Blue-A',1,[],0);
+    [data, h] = fcs_scatter(f2,'FITC-A','Pacific Blue-A',1,[],0);
     assert(all(size(data) == [114929 2]));
     outputfig(h,'fcs_test',TASBEConfig.get('plotPath'));
