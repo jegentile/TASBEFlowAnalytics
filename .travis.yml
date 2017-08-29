@@ -23,6 +23,8 @@ before_install:
     - travis_retry sudo apt-get install -y -qq software-properties-common python-software-properties
     - travis_retry sudo apt-add-repository -y ppa:octave/stable
     - travis_retry sudo apt-get -y -qq update
+    # Get fltk for octave graphics
+    - travis_retry sudo apt-get -y -qq install libfltk1.3
     # get Octave 4,0
     - travis_retry sudo apt-get -y -qq install octave liboctave-dev
     # install MOxUnit
