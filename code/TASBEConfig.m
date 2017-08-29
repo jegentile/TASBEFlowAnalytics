@@ -12,6 +12,9 @@ classdef TASBEConfig
             s = struct();
             defaults = containers.Map();
             
+            % Testing variables
+            s.testing.fakeFigureSaves = 0;
+            
             % Matlab GMdistribution
             % Generic flow data analysis
             s.flow.rangeMin = 0;                           % bin minimum (log10 scale)

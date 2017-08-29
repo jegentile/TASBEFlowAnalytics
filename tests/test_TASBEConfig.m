@@ -7,8 +7,6 @@ function test_suite = test_TASBEConfig
 
 function test_config
 
-TASBEConfig.reset();
-
 assert(TASBEConfig.isSet('foo') == false);
 
 missingError = false;
