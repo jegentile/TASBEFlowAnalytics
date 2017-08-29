@@ -35,8 +35,8 @@ end
 
 if (is_octave)
     % Prettify the fonts
-    FN = findall(h,'-property','FontName');
-    set(FN,'FontName','Helvetica');
+    %FN = findall(h,'-property','FontName');
+    %set(FN,'FontName','Helvetica');
     %FS = findall(h,'-property','FontSize');
     %set(FS,'FontSize',8);
     
