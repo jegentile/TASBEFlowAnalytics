@@ -157,7 +157,7 @@ test-matlab:
 	fi;
 
 test-octave:
-	if [ -n "$(OCTAVE_BIN)" ]; then \
+	@if [ -n "$(OCTAVE_BIN)" ]; then \
 		$(OCTAVE_RUN) "$(TEST)"; \
 	else \
 		echo "octave binary could not be found, skipping"; \
