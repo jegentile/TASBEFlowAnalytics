@@ -45,8 +45,8 @@ if (is_octave)
 else
     print(h,'-depsc2',[path shortname]); % Still produce a vector format when invoked by hand via Matlab
 end
-%print(h,'-dpng',[path shortname]);
-saveas(h,[path shortname '.fig']);
+print(h,'-dpng',[path shortname]);
+%saveas(h,[path shortname '.fig']);
 
 if(strcmp(get(h,'visible'),'off'))
     close(h);
