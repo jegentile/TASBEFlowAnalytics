@@ -90,7 +90,7 @@ else
 	TEST_RUNNER=moxunit_runtests
 endif
 
-TEST=$(ADDPATH);graphics_toolkit('fltk');success=$(TEST_RUNNER)($(RUNTESTS_ARGS));exit(~success);
+TEST=$(ADDPATH);available_graphics_toolkits;graphics_toolkit('fltk');success=$(TEST_RUNNER)($(RUNTESTS_ARGS));exit(~success);
 
 MATLAB_BIN=$(shell which $(MATLAB))
 OCTAVE_BIN=$(shell which $(OCTAVE))
