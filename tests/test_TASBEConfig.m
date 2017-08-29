@@ -54,6 +54,3 @@ try
 catch e  % error is expected
 end
 if missingError, error('Should have failed on missing preference'); end;
-
-
-fprintf(' ok\n');
