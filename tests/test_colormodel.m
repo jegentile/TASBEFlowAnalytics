@@ -9,20 +9,11 @@ function test_colormodel_endtoend
 
 stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
 
-
 beadfile = [stem0312 'Beads_P3.fcs'];
 blankfile = [stem0312 'blank_P3.fcs'];
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 AGP = AutogateParameters();
-% Adjust AGP values if needed.  The most common adjustments are below:
-% These are the most common values to adjust:
-% Match t
-%AGP.channel_names = {'FSC-A','SSC-A','FSC-H','FSC-W','SSC-H','SSC-W'};
-% Typically two components: one tight single-cell component, one diffuse 
-% non-cell or clump component.  More complex distributions may need more.
-%AGP.k_components = 2;
-%AGP.selected_components = [1];
 autogate = autodetect_gating(blankfile,AGP,'/tmp/plots');
 
 % Create one channel / colorfile pair for each color
@@ -114,3 +105,121 @@ expected_scales = [...
     0.45834      NaN       NaN];
 
 assertElementsAlmostEqual(CTM.scales,       expected_scales, 'absolute', 0.02);
+
+
+
+function test_colormodel_singlered
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+
+beadfile = [stem0312 'Beads_P3.fcs'];
+blankfile = [stem0312 'blank_P3.fcs'];
+
+% Create one channel / colorfile pair for each color
+channels = {}; colorfiles = {};
+channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
+channels{1} = setPrintName(channels{1}, 'mKate');
+channels{1} = setLineSpec(channels{1}, 'r');
+colorfiles{1} = [stem0312 'mkate_P3.fcs'];
+
+% Multi-color controls are used for converting other colors into MEFL units
+% Any channel without a control mapping it to MEFL will be left in arbirary units.
+colorpairfiles = {};
+
+CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
+CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
+
+CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+CM=set_bead_channel(CM,'PE-TR');
+
+% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
+CM=set_bead_min(CM, 1.8);
+% The peak threshold determines the minumum count per bin for something to
+% be considered part of a peak.  Set if automated threshold finds too many or few peaks
+CM=set_bead_peak_threshold(CM, 600);
+CM=set_FITC_channel_name(CM, 'PE-Tx-Red-YG-A');
+
+settings = TASBESettings();
+settings = setSetting(settings, 'path', '/tmp/plots');
+% Execute and save the model
+CM=resolve(CM, settings);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+
+UT = struct(CMS.unit_translation);
+assertElementsAlmostEqual(UT.k_MEFL,        59.9971,  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    5);
+assertElementsAlmostEqual(UT.fit_error,     0.019232,   'absolute', 0.002);
+assertElementsAlmostEqual(UT.peak_sets{1},  [110.3949 227.5807 855.4849 2.4685e+03], 'relative', 1e-2);
+
+AFM_R = struct(CMS.autofluorescence_model{1});
+assertElementsAlmostEqual(AFM_R.af_mean,    3.6683,  'absolute', 0.5);
+assertElementsAlmostEqual(AFM_R.af_std,     17.5621, 'absolute', 0.5);
+
+COMP = struct(CMS.compensation_model);
+assertElementsAlmostEqual(COMP.matrix,      1.0000, 'absolute', 1e-3);
+
+CTM = struct(CMS.color_translation_model);
+assertElementsAlmostEqual(CTM.scales,   NaN);
+
+
+
+function test_colormodel_twopeakred
+
+stem0312 = '../TASBEFlowAnalytics-Tutorial/example_controls/2012-03-12_';
+
+beadfile = [stem0312 'Beads_P3.fcs'];
+blankfile = [stem0312 'blank_P3.fcs'];
+
+% Create one channel / colorfile pair for each color
+channels = {}; colorfiles = {};
+channels{1} = Channel('PE-Tx-Red-YG-A', 561, 610, 20);
+channels{1} = setPrintName(channels{1}, 'mKate');
+channels{1} = setLineSpec(channels{1}, 'r');
+colorfiles{1} = [stem0312 'mkate_P3.fcs'];
+
+% Multi-color controls are used for converting other colors into MEFL units
+% Any channel without a control mapping it to MEFL will be left in arbirary units.
+colorpairfiles = {};
+
+CM = ColorModel(beadfile, blankfile, channels, colorfiles, colorpairfiles);
+CM=set_bead_plot(CM, 2); % 2 = detailed plots; 1 = minimal plot; 0 = no plot
+
+CM=set_bead_model(CM,'SpheroTech RCP-30-5A'); % Entry from BeadCatalog.xls matching your beads
+CM=set_bead_batch(CM,'Lot AA01, AA02, AA03, AA04, AB01, AB02, AC01, GAA01-R'); % Entry from BeadCatalog.xls containing your lot
+CM=set_bead_channel(CM,'PE-TR');
+
+% Ignore all bead data below 10^[bead_min] as being too "smeared" with noise
+CM=set_bead_min(CM, 2.7);
+% The peak threshold determines the minumum count per bin for something to
+% be considered part of a peak.  Set if automated threshold finds too many or few peaks
+CM=set_bead_peak_threshold(CM, 600);
+CM=set_FITC_channel_name(CM, 'PE-Tx-Red-YG-A');
+
+settings = TASBESettings();
+settings = setSetting(settings, 'path', '/tmp/plots');
+% Execute and save the model
+CM=resolve(CM, settings);
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Check results in CM:
+CMS = struct(CM);
+
+UT = struct(CMS.unit_translation);
+assertElementsAlmostEqual(UT.k_MEFL,        64.5559,  'relative', 1e-2);
+assertElementsAlmostEqual(UT.first_peak,    7);
+assertElementsAlmostEqual(UT.fit_error,     0.00,   'absolute', 0.002);
+assertElementsAlmostEqual(UT.peak_sets{1},  [855.4849 2.4685e+03], 'relative', 1e-2);
+
+AFM_R = struct(CMS.autofluorescence_model{1});
+assertElementsAlmostEqual(AFM_R.af_mean,    3.6683,  'absolute', 0.5);
+assertElementsAlmostEqual(AFM_R.af_std,     17.5621, 'absolute', 0.5);
+
+COMP = struct(CMS.compensation_model);
+assertElementsAlmostEqual(COMP.matrix,      1.0000, 'absolute', 1e-3);
+
+CTM = struct(CMS.color_translation_model);
+assertElementsAlmostEqual(CTM.scales,   NaN);
