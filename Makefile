@@ -6,11 +6,12 @@
 MATLAB?=matlab
 OCTAVE?=octave
 
+PACKAGEDIR=$(CURDIR)
 TESTDIR=$(CURDIR)/tests
 ROOTDIR=$(CURDIR)/code
 
-ADDPATH=orig_dir=pwd();cd('$(ROOTDIR)');tasbe_set_path();cd(orig_dir)
-RMPATH=rmpath('$(ROOTDIR)');
+ADDPATH=orig_dir=pwd();cd('$(PACKAGEDIR)');tasbe_set_path();cd(orig_dir)
+RMPATH=rmpath('$(PACKAGEDIR)');
 SAVEPATH=savepath();exit(0)
 
 INSTALL=$(ADDPATH);$(SAVEPATH)
@@ -89,7 +90,8 @@ else
 	TEST_RUNNER=moxunit_runtests
 endif
 
-TEST=$(ADDPATH);success=$(TEST_RUNNER)($(RUNTESTS_ARGS));exit(~success);
+TEST_INIT=TASBEConfig.reset();TASBEConfig.set('testing.fakeFigureSaves',1);warning('backtrace','off')
+TEST=$(ADDPATH);$(TEST_INIT);success=$(TEST_RUNNER)($(RUNTESTS_ARGS));exit(~success);
 
 MATLAB_BIN=$(shell which $(MATLAB))
 OCTAVE_BIN=$(shell which $(OCTAVE))
@@ -99,7 +101,7 @@ ifeq ($(MATLAB_BIN),)
     MATLAB_BIN=$(shell ls /Applications/MATLAB_R20*/bin/${MATLAB} 2>/dev/null | tail -1)
 endif
 	
-MATLAB_RUN=$(MATLAB_BIN) -nojvm -nodisplay -nosplash -r
+MATLAB_RUN=$(MATLAB_BIN) -nodisplay -nosplash -r
 OCTAVE_RUN=$(OCTAVE_BIN) --no-gui --quiet --eval
 
 install-matlab:
@@ -156,8 +158,8 @@ test-matlab:
 	fi;
 
 test-octave:
-	if [ -n "$(OCTAVE_BIN)" ]; then \
-		$(OCTAVE_RUN) "$(TEST)"; \
+	@if [ -n "$(OCTAVE_BIN)" ]; then \
+		$(OCTAVE_RUN) "pkg load io;$(TEST)"; \
 	else \
 		echo "octave binary could not be found, skipping"; \
 	fi;

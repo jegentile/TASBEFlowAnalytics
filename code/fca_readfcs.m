@@ -49,8 +49,7 @@ if nargin == 0
 else
     filecheck = dir(filename);
     if size(filecheck,1) == 0
-        hm = msgbox([filename,': The file does not exist!'], ...
-            'FcAnalysis info','warn');
+        warning('FCS:Read',[filename,': The file does not exist!']); 
         fcsdat = []; fcshdr = [];
         return;
     end

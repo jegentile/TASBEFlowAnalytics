@@ -51,18 +51,27 @@ function returned = getBeadCatalog(forceReload)
     persistent catalog;
     if nargin<1, forceReload=false; end;
     if isempty(catalog) || forceReload,
-        warning('off','MATLAB:xlsread:ActiveX')
-        [nums txts combo] = xlsread('BeadCatalog.xls');
+        [nums txts combo] = xlsread([fileparts(mfilename('fullpath')) '/BeadCatalog.xlsx']);
         catalog = parseCatalog(combo);
     end
     returned = catalog;
 end
-        
+
+function x = emptyOrNaN(v)
+    if isempty(v), 
+        x = true; return;
+    elseif isnumeric(v) && isnan(v(1)), 
+        x = true; return;
+    else
+        x = false; return;
+    end
+end
+
 function catalog = parseCatalog(entries)
     currentLine = 1;
     catalog = {};
     while currentLine<=size(entries,1)
-        if isnan(entries{currentLine,1}) % skip lines that start with blanks
+        if emptyOrNaN(entries{currentLine,1}) % skip lines that start with blanks
             currentLine = currentLine+1;
         else % otherwise, try to parse as a bead model entry
             [catalog{end+1} currentLine] = parseModel(entries,currentLine);
@@ -106,12 +115,12 @@ function channelEntry = parseChannel(entries,currentLine)
     name = row{1};
     laser = row{2};
     if ischar(row{3}), filter = row{3}; 
-    elseif isnan(row{3}), filter = 'Unspecified';
+    elseif emptyOrNaN(row{3}), filter = 'Unspecified';
     else error('Line %i: filter must be either a string or blank',currentLine);
     end
     units = row{4};
     try 
-        lastPeak = find(~cellfun(@isnan,row(5:end)),1,'last');
+        lastPeak = find(~cellfun(@emptyOrNaN,row(5:end)),1,'last');
     catch e
         error('Line %i: couldn''t interpret peak specifications',currentLine);
     end
