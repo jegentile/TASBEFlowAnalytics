@@ -51,8 +51,8 @@ function returned = getBeadCatalog(forceReload)
     persistent catalog;
     if nargin<1, forceReload=false; end;
     if isempty(catalog) || forceReload,
-        warning('off','MATLAB:xlsread:ActiveX')
-        [nums txts combo] = xlsread('BeadCatalog.xls');
+        %warning('off','MATLAB:xlsread:ActiveX')
+        [nums txts combo] = xlsread('BeadCatalog.xlsx');
         catalog = parseCatalog(combo);
     end
     returned = catalog;
