@@ -18,8 +18,20 @@ function directories_added=tasbe_set_path()
 
     root_dir=fileparts(mfilename('fullpath'));
 
-    sub_dirs={''}; % Add directories here as needed
-
+    sub_dirs={'code'}; % Add directories here as needed
+    
+    % Check if it's Octave; if not, assume matlab
+    v = ver();
+    isOctave = strcmpi(v(1).Name,'octave');
+    if isOctave, 
+        sub_dirs{end+1} = 'matlab_compat'; 
+    else
+        sub_dirs{end+1} = 'octave_compat'; 
+    end;
+    % Check if Matlab gmdistribution function is available; if not, load the free alternative
+    if isempty(which('gmdistribution')), sub_dirs{end+1} = 'gmdistribution'; end;
+    
+    
     % Construct the path to be added by adding the pathsep() after
     % each subdirectory
     make_full_path_with_sep=@(sub_dir)[fullfile(root_dir,sub_dir) ...

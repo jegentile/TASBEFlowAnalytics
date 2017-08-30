@@ -1,4 +1,4 @@
-function resu = df_rows(df)
+function resu = rows(df)
   %# function resu = rows(df)
   %# returns the number of rows of a dataframe
 

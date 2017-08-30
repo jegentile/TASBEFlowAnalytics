@@ -29,7 +29,7 @@
 %%                    and whose values are 1 to k specify the components
 %%                    each row is initially allocated to.  The mean, variance
 %%                    and weight of each component is calculated from that
-%%       @item structure    with elements  mu,  Sigma  ComponentProportion
+%%       @item structure    with elements  mu,  Sigma  PComponents
 %%       @end itemize
 %%       For 'randSample', 'plus' and 'cluster', the initial variance of each
 %%       component is the variance of the entire data sample.
@@ -187,7 +187,7 @@ function obj = fitgmdist(data, k, varargin)
         mu    = start.mu;
         Sigma = start.Sigma;
         if (isfield (start, 'ComponentProprition'))
-          p = start.ComponentProportion(:)';
+          p = start.PComponents(:)';
         end
         if (any (size (data, 2) ~= [size(mu,2), size(Sigma)]) || ...
             any (k ~= [size(mu,1), size(p,2)]))
@@ -197,7 +197,7 @@ function obj = fitgmdist(data, k, varargin)
         error ('fitgmdist: invalid start parameter');
       end
       if (isfield (start, 'ComponentProprition'))
-        p = start.ComponentProportion(:)';
+        p = start.PComponents(:)';
       end
     else
       validIndices = 0;
@@ -259,13 +259,13 @@ function obj = fitgmdist(data, k, varargin)
       end
       if (rows (weights) ~= nRows)
         error ('fitgmdist: number of weights %d must match number of samples %d',...
-               df_rows (weights), nRows)
+               rows (weights), nRows)
       end
       non_zero = (weights(:,1) > 0);
       weights = weights(non_zero,:);
       data    = data   (non_zero,:);
 
-      nRows = df_rows (data);
+      nRows = rows (data);
       raw_samples = sum (weights(:,1));
     else
       raw_samples = nRows;

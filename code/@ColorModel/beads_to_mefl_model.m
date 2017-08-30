@@ -50,7 +50,7 @@ i_FITC = find(CM,FITC_channel);
 %PeakMEFLs = [791	2083	6562	16531	47575	136680	271771];
 
 PeakMEFLs = get_bead_peaks(CM.bead_model,CM.bead_channel,CM.bead_batch);
-if(PeakMEFLs>7)
+if(numel(PeakMEFLs>7))
     PeakMEFLs = PeakMEFLs((end-6):end);
 else if(PeakMEFLs<7)
         error('Cannot use beads with less than 7 peaks');
@@ -270,7 +270,7 @@ if makePlots>1
     xlabel('FACS FITC units'); ylabel('Beads MEFLs');
     title('Peak identification for SPHERO RCP-30-5A beads');
     %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
-    legend('Location','NorthWest','Observed','Constrained Fit');
+    legend('Observed','Constrained Fit','Location','NorthWest');
     outputfig(h,'bead-fit-curve',path);
 end
 

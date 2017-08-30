@@ -25,6 +25,8 @@ before_install:
     - travis_retry sudo apt-get -y -qq update
     # get Octave 4,0
     - travis_retry sudo apt-get -y -qq install octave liboctave-dev
+    # install Octave io package
+    - octave --no-gui --quiet --eval "pkg install -forge io"
     # install MOxUnit
     - cd ..
     - rm -rf MOxUnit
@@ -38,6 +40,9 @@ before_install:
     - rm -rf MOdox
     - travis_retry git clone -v git://github.com/MOdox/MOdox.git
     - make -C MOdox install
+    # retrieve Tutorial for running tests
+    - rm -rf TASBEFlowAnalytics-Tutorial
+    - git clone https://github.com/TASBE/TASBEFlowAnalytics-Tutorial
     # go back to original directory
     - cd TASBEFlowAnalytics
 
