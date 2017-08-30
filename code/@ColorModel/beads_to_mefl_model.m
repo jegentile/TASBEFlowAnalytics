@@ -189,8 +189,13 @@ for i=1:numel(CM.Channels),
 end
 
 % look for the best linear fit of log10(peak_means) vs. log10(PeakMEFLs)
-if(n_peaks>7), error('Bead calibration failed: found unexpectedly many bead peaks'); end;
-if(n_peaks==0), error('Bead calibration failed: found no bead peaks'); end;
+if(n_peaks>7)
+    warning('Bead calibration found unexpectedly many bead peaks: truncating to use top peaks only');
+    n_peaks = 7;
+    segment_peak_means = segment_peak_means((end-6):end);
+    peak_means = peak_means((end-6):end);
+    peak_counts = peak_counts((end-6):end);
+end
 
 % Use log scale for fitting to avoid distortions from highest point
 if(n_peaks>=2)
@@ -219,11 +224,16 @@ if(n_peaks>=2)
     if(cf_error>1.05), warning('TASBE:Beads','Bead calibration may be incorrect: fit more than 5 percent off: error = %.2d',cf_error); end;
     %if(abs(model(1)-1)>0.05), warning('TASBE:Beads','Bead calibration probably incorrect: fit more than 5 percent off: slope = %.2d',model(1)); end;
     k_MEFL = 10^constrained_fit;
-else % 1 peak
+elseif(n_peaks==1) % 1 peak
     warning('TASBE:Beads','Only one bead peak found, assuming brightest');
     fit_error = 0; first_peak = numel(PeakMEFLs)+1; % 7 vs. 8 kludge
     if ~isempty(force_peak), first_peak = force_peak; end
     k_MEFL = PeakMEFLs(first_peak-1)/peak_means; % 7 vs. 8 kludge
+else % n_peaks = 0
+    warning('Bead calibration failed: found no bead peaks; using single dummy peak');
+    k_MEFL = 1;
+    fit_error = Inf;
+    first_peak = NaN;
 end;
 
 % Plot fitted channel
