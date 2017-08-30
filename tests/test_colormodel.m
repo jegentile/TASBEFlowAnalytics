@@ -90,27 +90,27 @@ assertElementsAlmostEqual(UT.fit_error,     0);
 assertElementsAlmostEqual(UT.peak_sets{1},  [128.35], 'relative', 1e-2);
 
 AFM_Y = struct(CMS.autofluorescence_model{1});
-assertElementsAlmostEqual(AFM_Y.af_mean,    3.2226,  'absolute', 0.5);
-assertElementsAlmostEqual(AFM_Y.af_std,     16.9663, 'absolute', 0.5);
+assertElementsAlmostEqual(AFM_Y.af_mean,    3.2600,  'absolute', 0.5);
+assertElementsAlmostEqual(AFM_Y.af_std,     17.0788, 'absolute', 0.5);
 AFM_R = struct(CMS.autofluorescence_model{2});
-assertElementsAlmostEqual(AFM_R.af_mean,    3.3265,  'absolute', 0.5);
-assertElementsAlmostEqual(AFM_R.af_std,     17.2920, 'absolute', 0.5);
+assertElementsAlmostEqual(AFM_R.af_mean,    3.6683,  'absolute', 0.5);
+assertElementsAlmostEqual(AFM_R.af_std,     17.5621, 'absolute', 0.5);
 AFM_B = struct(CMS.autofluorescence_model{3});
-assertElementsAlmostEqual(AFM_B.af_mean,    5.3669,  'absolute', 0.5);
-assertElementsAlmostEqual(AFM_B.af_std,     16.6900, 'absolute', 0.5);
+assertElementsAlmostEqual(AFM_B.af_mean,    5.8697,  'absolute', 0.5);
+assertElementsAlmostEqual(AFM_B.af_std,     16.9709, 'absolute', 0.5);
 
 COMP = struct(CMS.compensation_model);
 expected_matrix = [...
-    1.0000      0.0054778   0.00031755;
-    0.0010386   1.0000      0.0021664;
-         0      0.00054793  1.0000];
+    1.0000      0.0056      0.0004;
+    0.0010      1.0000      0.0022;
+         0      0.0006      1.0000];
 
 assertElementsAlmostEqual(COMP.matrix,      expected_matrix, 'absolute', 1e-3);
 
 CTM = struct(CMS.color_translation_model);
 expected_scales = [...
-       NaN    0.95821    2.1802;
-    1.0420       NaN       NaN;
-    0.45799      NaN       NaN];
+       NaN    1.0097    2.1796;
+    0.9872       NaN       NaN;
+    0.45834      NaN       NaN];
 
 assertElementsAlmostEqual(CTM.scales,       expected_scales, 'absolute', 0.02);
