@@ -270,7 +270,7 @@ if makePlots>1
     xlabel('FACS FITC units'); ylabel('Beads MEFLs');
     title('Peak identification for SPHERO RCP-30-5A beads');
     %legend('Location','NorthWest','Observed','Linear Fit','Constrained Fit');
-    legend('Location','NorthWest','Observed','Constrained Fit');
+    legend('Observed','Constrained Fit','Location','NorthWest');
     outputfig(h,'bead-fit-curve',path);
 end
 
