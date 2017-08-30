@@ -159,7 +159,7 @@ test-matlab:
 
 test-octave:
 	@if [ -n "$(OCTAVE_BIN)" ]; then \
-		$(OCTAVE_RUN) "$(TEST)"; \
+		$(OCTAVE_RUN) "pkg load io;$(TEST)"; \
 	else \
 		echo "octave binary could not be found, skipping"; \
 	fi;
