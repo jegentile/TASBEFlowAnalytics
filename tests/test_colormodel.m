@@ -144,6 +144,7 @@ settings = TASBESettings();
 settings = setSetting(settings, 'path', '/tmp/plots');
 % Execute and save the model
 CM=resolve(CM, settings);
+save('-V7','/tmp/CM120312.mat','CM');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
