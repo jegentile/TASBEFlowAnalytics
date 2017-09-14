@@ -6,7 +6,7 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function [gate model] = autodetect_gating(file, AGP, output_path)
+function GMMG = GMMGating(file, AGP, output_path)
 % AGP = AutogateParameters
 % Model is a gmdistribution
 
@@ -61,26 +61,26 @@ eigsort = sorted_eigs(:,2);
 if isempty(AGP.selected_components),
     AGP.selected_components = 1;
 end
-model.selected_components = eigsort(AGP.selected_components);
+GMMG.selected_components = eigsort(AGP.selected_components);
 
 % reweight components to make select components tighter
 reweight = dist.PComponents;
-lossweight = AGP.tightening*sum(reweight(model.selected_components));
+lossweight = AGP.tightening*sum(reweight(GMMG.selected_components));
 for i=1:AGP.k_components,
-    if(isempty(find(i==model.selected_components, 1)))
+    if(isempty(find(i==GMMG.selected_components, 1)))
         reweight(i) = reweight(i)-AGP.tightening*reweight(i);
     else
         reweight(i) = reweight(i)*(1+lossweight);
     end
 end
 
-% Assembly model package:
-model.channel_names = AGP.channel_names;
-model.distribution = gmdistribution(dist.mu,dist.Sigma,reweight);
-model.deviations = AGP.deviations;
+% Assembly GMMG package:
+GMMG.channel_names = AGP.channel_names;
+GMMG.distribution = gmdistribution(dist.mu,dist.Sigma,reweight);
+GMMG.deviations = AGP.deviations;
 
 % gate function just runs autogate_filter on model
-gate = afslim(@(fcshdr,rawfcs)(autogate_filter(model,fcshdr,rawfcs)),model);
+GMMG = class(GMMG,'GMMGating',Filter());
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the plots
@@ -88,15 +88,15 @@ gate = afslim(@(fcshdr,rawfcs)(autogate_filter(model,fcshdr,rawfcs)),model);
 if AGP.density >= 1, type = 'image'; else type = 'contour'; end
 
 % Plot vs. gate:
-gated = gate(fcshdr,rawfcs);
+gated = applyFilter(GMMG,fcshdr,rawfcs);
 % compute component gates too
 if AGP.show_nonselected,
     fprintf('Computing individual components');
     c_gated = cell(AGP.k_components,1);
     for i=1:AGP.k_components
-        tmp_model = model;
+        tmp_model = GMMG;
         tmp_model.selected_components = eigsort(i);
-        c_gated{i} = autogate_filter(tmp_model,fcshdr,rawfcs);
+        c_gated{i} = applyFilter(tmp_model,fcshdr,rawfcs);
         fprintf('.');
     end
     fprintf('\n');

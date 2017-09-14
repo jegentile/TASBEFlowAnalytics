@@ -43,7 +43,7 @@ function CM = ColorModel(beadfile, blankfile, channels, colorfiles, pairfiles)
         CM.noise_model=[]             ;% For understanding the expected constitutive expression noise
         CM.filters={};                 % filters to remove problematic data (e.g. debris, time-contamination)
 
-        CM.filters{1} = @time_filter; % add default quarter second data exclusion
+        CM.filters{1} = TimeFilter(); % add default quarter second data exclusion
         
         if nargin == 0
             channels{1} = Channel();
