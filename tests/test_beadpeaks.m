@@ -88,7 +88,7 @@ CM=resolve(CM, settings);
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:
 CMS = struct(CM);
-UT = struct(CMS.unit_translation)
+UT = struct(CMS.unit_translation);
 assertElementsAlmostEqual(UT.k_MEFL,        1);
 assertElementsAlmostEqual(UT.first_peak,    NaN);
 assertTrue(isinf(UT.fit_error));
