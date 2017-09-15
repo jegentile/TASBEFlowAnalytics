@@ -14,7 +14,7 @@ blankfile = [stem0312 'blank_P3.fcs'];
 
 % Autodetect gating with an N-dimensional gaussian-mixture-model
 AGP = AutogateParameters();
-autogate = autodetect_gating(blankfile,AGP,'/tmp/plots');
+autogate = GMMGating(blankfile,AGP,'/tmp/plots');
 
 % Create one channel / colorfile pair for each color
 channels = {}; colorfiles = {};
@@ -144,6 +144,7 @@ settings = TASBESettings();
 settings = setSetting(settings, 'path', '/tmp/plots');
 % Execute and save the model
 CM=resolve(CM, settings);
+save('-V7','/tmp/CM120312.mat','CM');
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Check results in CM:

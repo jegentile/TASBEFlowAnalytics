@@ -19,7 +19,7 @@ if nargin < 9, filters = {}; end;
 [fcsraw,fcshdr,fcsdat] = fca_readfcs(strtrim(filename));
 % optional discarding of filtered data (e.g., debris, time contamination)
 for i=1:numel(filters)
-    fcsdat = feval(filters{i},fcshdr,fcsdat);
+    fcsdat = applyFilter(filters{i},fcshdr,fcsdat);
 end
 
 xc = get_fcs_color(fcsdat,fcshdr,xcolor);
