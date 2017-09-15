@@ -53,7 +53,7 @@ for i=1:step:n_var
 end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend('Location','Best',legendentries);
+legend(legendentries,'Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title(['Raw ',outputsettings.StemName,' transfer curves']);
@@ -77,7 +77,7 @@ for i=1:step:n_var
 end;
 xlabel(['IFP ' in_units]); ylabel(['OFP ' out_units ' / CFP ' cfp_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend('Location','Best',legendentries);
+legend(legendentries,'Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title([outputsettings.StemName,' transfer curves normalized by CFP']);
@@ -100,7 +100,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel(['IFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend('Location','Best',pmlegendentries,'Minus');
+legend(pmlegendentries,'Minus','Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedInputAxis), ylim(outputsettings.FixedInputAxis); end;
 title([outputsettings.StemName,' IFP vs. CFP']);
@@ -124,7 +124,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend('Location','Best',pmlegendentries,'Minus');
+legend(pmlegendentries,'Minus','Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title([outputsettings.StemName,' OFP vs. CFP']);
@@ -170,7 +170,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend('Location','Best',legendentries);
+legend(legendentries,'Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title(['+/- Ratios for ',outputsettings.StemName]);
@@ -185,7 +185,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel('Fold Activation');
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend('Location','Best',legendentries);
+legend(legendentries,'Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title(['+/- Ratios for ',outputsettings.StemName]);
@@ -208,7 +208,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel('SNR (db)');
 set(gca,'XScale','log');
-legend('Location','Best',pmlegendentries,'Input SNR');
+legend(pmlegendentries,'Input SNR','Location','Best');
 title([outputsettings.StemName,' SNR vs. CFP']);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-SNR'],outputsettings.Directory);
 
@@ -224,6 +224,6 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel('\Delta SNR (db)');
 set(gca,'XScale','log');
-legend('Location','Best',pmlegendentries);
+legend(pmlegendentries,'Location','Best');
 title([outputsettings.StemName,'\Delta SNR vs. CFP']);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-dSNR'],outputsettings.Directory);
