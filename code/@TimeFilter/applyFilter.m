@@ -6,12 +6,11 @@
 % exception, as described in the file LICENSE in the TASBE analytics
 % package distribution's top directory.
 
-function data = time_filter(fcshdr,rawfcs)
+function data = applyFilter(TF,fcshdr,rawfcs)
 % Optional discarding of early (possibly contaminated) data
 
 if(numel(rawfcs)==0), data = rawfcs; return; end
 
-early_data_exclusion = 25; % Discard first 25/100 seconds of data as likely contaminated
 found = false;
 for j=1:numel(fcshdr.par)
     if(strcmp('Time',fcshdr.par(j).name))
@@ -23,6 +22,6 @@ if(~found),
     warning('Model:Time','Could not find Time channel'); 
     data = rawfcs;
 else
-    not_early = timechannel>early_data_exclusion;
+    not_early = timechannel>TF.early_data_exclusion;
     data = rawfcs(not_early,:);
 end

@@ -16,7 +16,7 @@ function [data fcshdr] = read_filtered_au(CM,filename)
     data = rawfcs;
     % optional discarding of filtered data (e.g., debris, time contamination)
     for i=1:numel(CM.filters)
-        data = feval(CM.filters{i},fcshdr,data);
+        data = applyFilter(CM.filters{i},fcshdr,data);
     end
     % make sure we didn't throw away huge amounts...
     if numel(data)<numel(rawfcs)*0.1 % Threshold: at least 10% retained

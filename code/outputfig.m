@@ -10,14 +10,14 @@ function outputfig(h,name,path)
 % outputfig is an indirection that allows us to swap around the preferred
 % output format with little effort
 
-if TASBEConfig.get('testing.fakeFigureSaves'), 
-    warning('TASBE:Utilities','Test mode: not actually saving figure %s%s',path,name);
-    return;
-end;
-
 % Default path is current path
 if nargin < 3, path = './'; end; % Note: frontslash works for both Windows and Mac/Unix
 if path(numel(path)) ~= '/', path(numel(path)+1) = '/'; end; % ensure path ends in slash
+
+if TASBEConfig.get('testing.fakeFigureSaves'), 
+    warning('TASBE:Utilities','Test mode: not actually saving figure %s/%s',path,name);
+    return;
+end;
 
 % If directory doesn't exist, try to create it
 if ~isdir(path),
