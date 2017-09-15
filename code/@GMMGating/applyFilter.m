@@ -20,8 +20,8 @@ for i=1:n_channels,
 end;
 
 % Compute clustering and distance matrix
-clustered = GMMG.distribution.cluster(channel_data);
-mh_dist_sq = GMMG.distribution.mahal(channel_data);
+clustered = cluster(GMMG.distribution,channel_data);
+mh_dist_sq = mahal(GMMG.distribution,channel_data);
 
 near = zeros(size(rawfcs,1),1);
 for i=1:numel(GMMG.selected_components),

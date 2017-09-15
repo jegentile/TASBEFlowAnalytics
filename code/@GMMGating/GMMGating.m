@@ -7,10 +7,21 @@
 % package distribution's top directory.
 
 function GMMG = GMMGating(file, AGP, output_path)
+
+GMMG.selected_components = [];
+GMMG.channel_names = {};
+GMMG.distribution = {};
+GMMG.deviations = [];
+
+% gate function just runs autogate_filter on model
+GMMG = class(GMMG,'GMMGating',Filter());
+
+if nargin==0, return; end;
+
 % AGP = AutogateParameters
 % Model is a gmdistribution
 
-[unscaled fcshdr rawfcs] = fca_readfcs(file);
+[~, fcshdr, rawfcs] = fca_readfcs(file);
 
 if(nargin<2), AGP = AutogateParameters(); end;
 if (nargin < 3)
@@ -49,11 +60,12 @@ fprintf('Gating autodetect using %.2f%% valid and non-saturated data\n',100*sum(
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Find and adjust gaussian fit
 
-dist = gmdistribution.fit(channel_data,AGP.k_components,'Regularize',1e-5);
+dist = fitgmdist(channel_data,AGP.k_components,'Regularize',1e-5);
+dss = struct(dist); %% Terrible kludge: should actually make accessors
 % sort component identities by eigenvalue size
 maxeigs = zeros(AGP.k_components,1);
 for i=1:AGP.k_components,
-    maxeigs(i) = max(eig(dist.Sigma(:,:,i)));
+    maxeigs(i) = max(eig(dss.Sigma(:,:,i)));
 end
 sorted_eigs = sortrows([maxeigs'; 1:AGP.k_components]');
 eigsort = sorted_eigs(:,2);
@@ -64,7 +76,7 @@ end
 GMMG.selected_components = eigsort(AGP.selected_components);
 
 % reweight components to make select components tighter
-reweight = dist.PComponents;
+reweight = dss.PComponents;
 lossweight = AGP.tightening*sum(reweight(GMMG.selected_components));
 for i=1:AGP.k_components,
     if(isempty(find(i==GMMG.selected_components, 1)))
@@ -76,11 +88,11 @@ end
 
 % Assembly GMMG package:
 GMMG.channel_names = AGP.channel_names;
-GMMG.distribution = gmdistribution(dist.mu,dist.Sigma,reweight);
+GMMG.distribution = gmdistribution(dss.mu,dss.Sigma,reweight);
 GMMG.deviations = AGP.deviations;
 
-% gate function just runs autogate_filter on model
-GMMG = class(GMMG,'GMMGating',Filter());
+% AGP = AutogateParameters
+% Model is a gmdistribution
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Make the plots

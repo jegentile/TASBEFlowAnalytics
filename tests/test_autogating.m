@@ -20,9 +20,10 @@ gate = struct(gate);
 assertEqual(gate.selected_components, 1);
 
 expected_mu = [5.1117    3.4087;    4.5555    3.3427];
-assertElementsAlmostEqual(gate.distribution.mu,expected_mu,'absolute',0.01);
+GDS = struct(gate.distribution);
+assertElementsAlmostEqual(GDS.mu,expected_mu,'absolute',0.01);
 
 expected_sigma(:,:,1) = [0.0130    0.0149;    0.0149    0.0328];
 expected_sigma(:,:,2) = [0.2053    0.0548;    0.0548    0.0515];
-assertElementsAlmostEqual(gate.distribution.Sigma,expected_sigma,'absolute',0.01);
+assertElementsAlmostEqual(GDS.Sigma,expected_sigma,'absolute',0.01);
 
