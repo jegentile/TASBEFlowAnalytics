@@ -102,6 +102,10 @@ if nRows > 1
     for col = 1:nCols
         % Extract the x location data needed for the errorbar plots:
         x = get(get(handles(col),'children'),'xdata');
+        if isempty(x) % Change in representation after r2014
+            xMat = handles(col).getSingleBarExtentsArray(1);
+            x = xMat(2,:);
+        end
         % Use the mean x values to call the standard errorbar fn; the
         % errorbars will now be centred on each bar; these are in ascending
         % order so use xOrder to ensure y values and errors are too:
