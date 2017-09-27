@@ -100,7 +100,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel(['IFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend(pmlegendentries,'Minus','Location','Best');
+legend({pmlegendentries{:} 'Minus'},'Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedInputAxis), ylim(outputsettings.FixedInputAxis); end;
 title([outputsettings.StemName,' IFP vs. CFP']);
@@ -124,7 +124,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel(['OFP ' out_units]);
 set(gca,'XScale','log'); set(gca,'YScale','log');
-legend(pmlegendentries,'Minus','Location','Best');
+legend({pmlegendentries{:} 'Minus'},'Location','Best');
 if(outputsettings.FixedInputAxis), xlim(outputsettings.FixedInputAxis); end;
 if(outputsettings.FixedOutputAxis), ylim(outputsettings.FixedOutputAxis); end;
 title([outputsettings.StemName,' OFP vs. CFP']);
@@ -208,7 +208,7 @@ for i=1:step:n_var
 end;
 xlabel(['CFP ' cfp_units]); ylabel('SNR (db)');
 set(gca,'XScale','log');
-legend(pmlegendentries,'Input SNR','Location','Best');
+legend({pmlegendentries{:} 'Input SNR'},'Location','Best');
 title([outputsettings.StemName,' SNR vs. CFP']);
 outputfig(h,[outputsettings.StemName,'-',outputsettings.DeviceName,'-SNR'],outputsettings.Directory);
 
