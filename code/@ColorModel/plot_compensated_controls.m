@@ -9,6 +9,9 @@ function plot_compensated_controls(CM,settings)
 % package distribution's top directory.
 
 n = numel(CM.Channels);
+
+if n==1, return; end; % nothing to plot if there's only one channel
+
 for driven=1:n
     data = readfcs_compensated_au(CM,CM.ColorFiles{driven},0,0);
 
