@@ -17,9 +17,11 @@ function active = estimate_fraction_active(PEM,MEFLs)
         binCenters = get_bin_centers(PEM.bins);
 
 	 if binCenters(1) > MEFLs(i)
-		idx = 1
+		idx = 1;
+	elseif binCenters(end) < MEFLs(i)
+		idx = length(binCenters);
 	else
-		idx = find(binCenters(1:end-1)<=MEFLs(i) & binCenters(2:end)>=MEFLs(i),1)
+		idx = find(binCenters(1:end-1)<=MEFLs(i) & binCenters(2:end)>=MEFLs(i),1);
 	end
 
 	idx = find(binCenters(1:end-1)<=MEFLs(i) & binCenters(2:end)>=MEFLs(i),1);
