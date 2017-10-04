@@ -23,9 +23,7 @@ function active = estimate_fraction_active(PEM,MEFLs)
 	else
 		idx = find(binCenters(1:end-1)<=MEFLs(i) & binCenters(2:end)>=MEFLs(i),1);
 	end
-
-	idx = find(binCenters(1:end-1)<=MEFLs(i) & binCenters(2:end)>=MEFLs(i),1);
-
+	
 	ratio = log10(MEFLs(i)/binCenters(idx))/log10(get_bin_widths(PEM.bins));
         active(i) = (1-ratio)*PEM.fraction_active(idx) + ratio*PEM.fraction_active(idx+1);
     end
